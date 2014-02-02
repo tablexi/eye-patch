@@ -1,7 +1,6 @@
-require "celluloid"
 require "aws/ses"
 
-class Eye::Notify::SES < Eye::Notify::Custom
+class Eye::Notify::SES < Eye::Notify
 
   param :access_key_id, String, true
   param :secret_access_key, String, true
@@ -20,3 +19,5 @@ class Eye::Notify::SES < Eye::Notify::Custom
       text_body: message_body }
   end
 end
+
+Eye::Notify::TYPES[:ses] = "SES"
