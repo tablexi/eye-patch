@@ -8,8 +8,11 @@ Gem::Specification.new do |spec|
   spec.version       = Eye::Patch::VERSION
   spec.authors       = ["Andrew Horner"]
   spec.email         = ["andrew@tablexi.com"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
+  spec.description   = "Easily load your eye configuration from a YAML file."
+  spec.summary       = %q[
+    Eye::Patch abstracts out the Eye DSL to allow you to load your configuration
+    from a structured YAML file, rather than relying on Eye's built-in DSL.
+  ]
   spec.homepage      = "https://github.com/tablexi/eye-patch"
   spec.license       = "MIT"
 
@@ -22,4 +25,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake"
 
   spec.add_dependency "eye"
+  spec.add_dependency "chronic_duration"
 end

@@ -1,30 +1,34 @@
-module Parser
-  refine Array do
-
-    def deep_symbolize_keys!
-      map do |val|
-        val.is_a?(Array) || val.is_a?(Hash) ? val.deep_symbolize_keys! : val
-      end
-    end
-  end
-
-  refine Hash do
-
-    def deep_symbolize_keys!
-      keys.each do |key|
-        val = delete(key)
-        self[key.to_sym] = val.is_a?(Hash) || val.is_a?(Array) ? val.deep_symbolize_keys! : val
-      end
-      self
-    end
-  end
-end
-
-using Parser
+require "chronic_duration"
 
 class Eye::Patch::Settings
 
-  def self.parse(filename)
-    YAML.load(File.open(filename)).deep_symbolize_keys!
+  def initialize(filename)
+    @settings = YAML.load(File.open(filename))
+  end
+
+  def [](value)
+    parsed[value]
+  end
+
+  private
+
+  def parsed
+    @parsed ||= parse(@settings)
+  end
+
+  def parse(item)
+    case item
+    when Hash
+      item.each_with_object({}) do |(key, val), result|
+        result[key.to_sym] = parse(val)
+      end
+    when Array
+      item.map { |val| parse(val) }
+    when String
+      # Assume that we should parse any time-like values
+      item =~ /\b(hour|second|minute)s?\b/ ? ChronicDuration.parse(item) : item
+    else
+      item
+    end
   end
 end
