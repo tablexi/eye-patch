@@ -1,4 +1,5 @@
 require "eye"
+require "eye/patch/overrides"
 
 module Eye::Patch
 
@@ -16,14 +17,5 @@ module Eye::Patch
     config.validate!
 
     config
-  end
-end
-
-module Eye::Controller::Load
-
-  private
-
-  def parse_config(filename)
-    Eye::Patch.parse(filename)
   end
 end

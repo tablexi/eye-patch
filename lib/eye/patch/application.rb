@@ -43,22 +43,20 @@ class Eye::Patch::Application < Hash
     @config[:groups] = {}
 
     Array(settings[:processes]).group_by{ |item| item[:group] }.each do |group_name, items|
-      if group_name
-        parse_group(group_name, items)
-      else
-        @config[:processes] = parse_process_list(items)
-      end
+      name = group_name || "__default__"
+
+      @config[:groups][name.to_s] = { application: settings[:name].to_s }
+      parse_group(name.to_s, items)
     end
   end
 
   def parse_group(name, processes)
-    @config[:groups][name.to_s] = {}
-    @config[:groups][name.to_s][:processes] = parse_process_list(processes)
+    @config[:groups][name][:processes] = parse_process_list(name, processes)
   end
 
-  def parse_process_list(processes)
+  def parse_process_list(group_name, processes)
     processes.each_with_object({}) do |process, process_map|
-      process_map[process[:name].to_s] = process[:config]
+      process_map[process[:name].to_s] = process[:config].merge(group: group_name)
     end
   end
 end
