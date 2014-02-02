@@ -11,37 +11,41 @@ class Eye::Patch::Application < Hash
   def parse
     @config = {}
 
-    parse_application
-    parse_notifications
-    parse_triggers
+    parse_configuration
     parse_processes
 
     @config
   end
 
   def root_settings
-    @settings[:application] || {}
-  end
-
-  def parse_application
-    @config.merge!(root_settings)
+    @root_settings ||= (@settings[:application] || {}).merge(
+      notify: parse_notifications,
+      triggers: parse_triggers,
+      checks: parse_checks )
   end
 
   def parse_notifications
-    @config[:notify] = {}
-
-    Array(@settings[:notifications]).each do |monitor|
-      @config[:notify][monitor[:name].to_s] = monitor[:level].to_sym
+    Array(@settings[:notifications]).each_with_object({}) do |notify, monitors|
+      monitors[notify[:name].to_s] = notify[:level].to_sym
     end
   end
 
   def parse_triggers
-    @config[:triggers] = {}
-
-    Array(@settings[:triggers]).each do |item|
-      trigger_data = Eye::Trigger.name_and_class(item[:name].to_sym)
-      @config[:triggers][trigger_data[:name]] = item[:config].merge(type: trigger_data[:type])
+    Array(@settings[:triggers]).each_with_object({}) do |trigger, triggers|
+      trigger_data = Eye::Trigger.name_and_class(trigger[:name].to_sym)
+      triggers[trigger_data[:name]] = trigger[:config].merge(type: trigger_data[:type])
     end
+  end
+
+  def parse_checks
+    Array(@settings[:checks]).each_with_object({}) do |check, checks|
+      check_data = Eye::Checker.name_and_class(check[:name].to_sym)
+      checks[check_data[:name]] = check[:config].merge(type: check_data[:type])
+    end
+  end
+
+  def parse_configuration
+    @config.merge!(root_settings)
   end
 
   def parse_processes
