@@ -1,6 +1,12 @@
 require "eye"
 require "eye/patch/overrides"
 
+begin
+  require "eye/notify/ses"
+rescue LoadError
+  # Don't worry about loading the ses notifier when `aws/ses` is unavailable
+end
+
 module Eye::Patch
 
   require "eye/patch/settings"
