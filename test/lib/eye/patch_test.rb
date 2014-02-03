@@ -51,14 +51,25 @@ describe Eye::Patch do
     end
 
     it "splits processes into groups" do
-      grouped_processes = @original["processes"].select { |process| process["group"] }
+      grouped_processes = @original["processes"].select { |process| process["group"] && !process["count"] }
       grouped_processes.each do |process|
         assert_equal process["group"], @application[:groups][process["group"]][:processes][process["name"]][:group]
       end
 
-      lone_processes = @original["processes"] - grouped_processes
+      lone_processes = @original["processes"].reject { |process| process["group"] }
       lone_processes.each do |process|
         assert_equal "__default__", @application[:groups]["__default__"][:processes][process["name"]][:group]
+      end
+    end
+
+    it "creates process clusters" do
+      process = @original["processes"].detect { |process| process["count"] }
+      process["count"].times do |index|
+        name = "#{process["name"]}-#{index}"
+        parsed_process = @application[:groups][process["group"]][:processes][name]
+
+        assert_equal process["group"], parsed_process[:group]
+        assert_equal process["config"]["pid_file"].gsub(/`ID`/, index.to_s), parsed_process[:pid_file]
       end
     end
 
