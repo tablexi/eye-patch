@@ -1,34 +1,37 @@
 require "chronic_duration"
 
-class Eye::Patch::Settings
+module Eye::Patch
 
-  def initialize(filename)
-    @settings = YAML.load(File.open(filename))
-  end
+  class Settings
 
-  def [](value)
-    parsed[value]
-  end
+    def initialize(filename)
+      @settings = YAML.load(File.open(filename))
+    end
 
-  private
+    def [](value)
+      parsed[value]
+    end
 
-  def parsed
-    @parsed ||= parse(@settings)
-  end
+    private
 
-  def parse(item)
-    case item
-    when Hash
-      item.each_with_object({}) do |(key, val), result|
-        result[key.to_sym] = parse(val)
+    def parsed
+      @parsed ||= parse(@settings)
+    end
+
+    def parse(item)
+      case item
+      when Hash
+        item.each_with_object({}) do |(key, val), result|
+          result[key.to_sym] = parse(val)
+        end
+      when Array
+        item.map { |val| parse(val) }
+      when String
+        # Assume that we should parse any time-like values
+        item =~ /\b(hour|second|minute)s?\b/ ? ChronicDuration.parse(item) : item
+      else
+        item
       end
-    when Array
-      item.map { |val| parse(val) }
-    when String
-      # Assume that we should parse any time-like values
-      item =~ /\b(hour|second|minute)s?\b/ ? ChronicDuration.parse(item) : item
-    else
-      item
     end
   end
 end

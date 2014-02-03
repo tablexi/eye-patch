@@ -1,46 +1,49 @@
 require_relative "group_set"
 require_relative "option_set"
 
-class Eye::Patch::Application < Hash
+module Eye::Patch
 
-  def initialize(settings)
-    super()
-    @settings = settings
-    self[settings[:name]] = parse
-  end
+  class Application < Hash
 
-  private
-
-  def parse
-    parse_configuration
-    parse_processes
-
-    @config
-  end
-
-  def parse_configuration
-    @config = (@settings[:application] || {}).merge(
-      name: @settings[:name],
-      notify: notifications,
-      triggers: triggers,
-      checks: checks )
-  end
-
-  def parse_processes
-    @config[:groups] = Eye::Patch::GroupSet.new(@config, @settings[:processes])
-  end
-
-  def notifications
-    Array(@settings[:notifications]).each_with_object({}) do |notify, monitors|
-      monitors[notify[:name]] = notify[:level].to_sym
+    def initialize(settings)
+      super()
+      @settings = settings
+      self[settings[:name]] = parse
     end
-  end
 
-  def triggers
-    Eye::Patch::OptionSet.new(Eye::Trigger, @settings[:triggers])
-  end
+    private
 
-  def checks
-    Eye::Patch::OptionSet.new(Eye::Checker, @settings[:checks])
+    def parse
+      parse_configuration
+      parse_processes
+
+      @config
+    end
+
+    def parse_configuration
+      @config = (@settings[:application] || {}).merge(
+        name: @settings[:name],
+        notify: notifications,
+        triggers: triggers,
+        checks: checks )
+    end
+
+    def parse_processes
+      @config[:groups] = GroupSet.new(@config, @settings[:processes])
+    end
+
+    def notifications
+      Array(@settings[:notifications]).each_with_object({}) do |notify, monitors|
+        monitors[notify[:name]] = notify[:level].to_sym
+      end
+    end
+
+    def triggers
+      OptionSet.new(Eye::Trigger, @settings[:triggers])
+    end
+
+    def checks
+      OptionSet.new(Eye::Checker, @settings[:checks])
+    end
   end
 end

@@ -17,7 +17,7 @@ describe Eye::Patch do
     end
 
     it "returns an Eye::Config" do
-      assert @parsed.is_a?(Eye::Config)
+      assert_kind_of Eye::Config, @parsed
     end
 
     it "gives the application an appropriate name" do

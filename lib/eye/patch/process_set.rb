@@ -1,19 +1,22 @@
-class Eye::Patch::ProcessSet < Hash
+module Eye::Patch
 
-  def initialize(group, processes)
-    @group = group
+  class ProcessSet < Hash
 
-    Array(processes).each do |process|
-      parse_process(process)
+    def initialize(group, processes)
+      @group = group
+
+      Array(processes).each do |process|
+        parse_process(process)
+      end
     end
-  end
 
-  private
+    private
 
-  def parse_process(process)
-    config = @group.merge(process[:config])
-    self[process[:name]] = config.merge(
-      name: process[:name],
-      group: @group[:name] )
+    def parse_process(process)
+      config = @group.merge(process[:config])
+      self[process[:name]] = config.merge(
+        name: process[:name],
+        group: @group[:name] )
+    end
   end
 end
