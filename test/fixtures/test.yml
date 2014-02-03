@@ -1,0 +1,38 @@
+name: Test Application
+
+config:
+  logger: /path/to/log/eye.log
+
+application:
+  working_dir: /path/to/application
+
+triggers:
+  - name: flapping
+    config:
+      times: 10
+      within: 1 minute
+
+notifications:
+  - name: monitoring
+    type: jabber
+    level: info
+    contact: test+admin@example.com
+    config:
+      from: test+notifier@example.com
+
+processes:
+  - name: my_process
+    config:
+      start_timeout: 25 seconds
+      start_command: bundle exec my_process
+      pid_file: tmp/pids/my_process.pid
+  - name: grouped_process_1
+    group: my_group
+    config:
+      start_command: bundle exec grouped_process
+      pid_file: tmp/pids/grouped_process_1.pid
+  - name: grouped_process_2
+    group: my_group
+    config:
+      start_command: bundle exec grouped_process
+      pid_file: tmp/pids/grouped_process_2.pid
