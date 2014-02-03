@@ -6,12 +6,6 @@ config:
 application:
   working_dir: /path/to/application
 
-triggers:
-  - name: flapping
-    config:
-      times: 10
-      within: 1 minute
-
 notifications:
   - name: monitoring
     type: jabber
@@ -19,6 +13,19 @@ notifications:
     contact: test+admin@example.com
     config:
       from: test+notifier@example.com
+
+triggers:
+  - name: flapping
+    config:
+      times: 10
+      within: 1 minute
+
+checks:
+  - name: memory
+    config:
+      times: 3
+      every: 20 seconds
+      below: 1.5 gigabytes
 
 processes:
   - name: my_process

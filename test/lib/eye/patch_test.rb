@@ -38,7 +38,16 @@ describe Eye::Patch do
       parsed_trigger = @application[:triggers][trigger["name"].to_sym]
 
       assert_equal trigger["config"]["times"], parsed_trigger[:times]
-      assert_equal ChronicDuration.parse(trigger["config"]["within"]), parsed_trigger[:within]
+      assert_equal Eye::Patch::ValueParser.parse(trigger["config"]["within"]), parsed_trigger[:within]
+    end
+
+    it "parses checks" do
+      check = @original["checks"].first
+      parsed_check = @application[:checks][check["name"].to_sym]
+
+      assert_equal check["config"]["times"], parsed_check[:times]
+      assert_equal Eye::Patch::ValueParser.parse(check["config"]["every"]), parsed_check[:every]
+      assert_equal Eye::Patch::ValueParser.parse(check["config"]["below"]), parsed_check[:below]
     end
 
     it "splits processes into groups" do

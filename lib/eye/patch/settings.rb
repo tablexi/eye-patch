@@ -1,4 +1,4 @@
-require "chronic_duration"
+require_relative "value_parser"
 
 module Eye::Patch
 
@@ -27,8 +27,7 @@ module Eye::Patch
       when Array
         item.map { |val| parse(val) }
       when String
-        # Assume that we should parse any time-like values
-        item =~ /\b(hour|second|minute)s?\b/ ? ChronicDuration.parse(item) : item
+        ValueParser.parse(item)
       else
         item
       end
