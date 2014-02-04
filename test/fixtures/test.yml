@@ -48,4 +48,4 @@ processes:
     count: 2
     config:
       start_command: bundle exec clustered-process
-      pid_file: tmp/pids/clustered-process-`ID`.pid
+      pid_file: "tmp/pids/clustered-process-{ID}.pid"

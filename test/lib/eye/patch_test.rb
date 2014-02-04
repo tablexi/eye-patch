@@ -55,7 +55,9 @@ describe Eye::Patch do
       grouped_processes.each do |process|
         assert_equal process["group"], @application[:groups][process["group"]][:processes][process["name"]][:group]
       end
+    end
 
+    it "puts ungrouped processes into the __default__ group" do
       lone_processes = @original["processes"].reject { |process| process["group"] }
       lone_processes.each do |process|
         assert_equal "__default__", @application[:groups]["__default__"][:processes][process["name"]][:group]
@@ -69,7 +71,7 @@ describe Eye::Patch do
         parsed_process = @application[:groups][process["group"]][:processes][name]
 
         assert_equal process["group"], parsed_process[:group]
-        assert_equal process["config"]["pid_file"].gsub(/`ID`/, index.to_s), parsed_process[:pid_file]
+        assert_equal process["config"]["pid_file"].gsub("{ID}", index.to_s), parsed_process[:pid_file]
       end
     end
 

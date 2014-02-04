@@ -35,7 +35,7 @@ module Eye::Patch
 
     def indexed_config(config, index)
       config.each_with_object({}) do |(key, value), result|
-        result[key] = value.is_a?(String) ? value.gsub(/`ID`/, index.to_s) : value
+        result[key] = value.is_a?(String) ? value.gsub("{ID}", index.to_s) : value
       end
     end
   end
