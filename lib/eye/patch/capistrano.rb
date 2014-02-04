@@ -6,8 +6,8 @@ Capistrano::Configuration.instance.load do
   _cset(:eye_roles) { :app }
 
   if fetch(:eye_default_hooks)
-    after "deploy:stop",     "eye:stop"
-    after "deploy:start",    "eye:start"
+    after  "deploy:stop",    "eye:stop"
+    after  "deploy:start",   "eye:start"
     before "deploy:restart", "eye:restart"
   end
 
