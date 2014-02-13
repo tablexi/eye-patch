@@ -28,9 +28,10 @@ module Eye::Patch
     end
 
     def parse_single_process(name, config)
-      self[name] = @group.merge(config).merge(
-        name: name,
-        group: @group[:name] )
+      self[name] = @group
+        .merge(stdout: config[:stdall], stderr: config[:stdall])
+        .merge(config)
+        .merge(name: name, group: @group[:name])
     end
 
     def indexed_config(config, index)

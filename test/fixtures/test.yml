@@ -33,6 +33,7 @@ processes:
       start_timeout: 25 seconds
       start_command: bundle exec my-process
       pid_file: tmp/pids/my-process.pid
+      stdall: log/my-process.log
   - name: first-grouped-process
     group: my-group
     config:

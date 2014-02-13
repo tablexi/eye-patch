@@ -79,5 +79,13 @@ describe Eye::Patch do
       process = @application[:groups]["__default__"][:processes].values.first
       assert_equal @application[:triggers], process[:triggers]
     end
+
+    it "sets :stderr and :stdout options for each process from passed :stdall" do
+      process = @original["processes"].reject { |process| process["group"] }.first
+      parsed_process = @application[:groups]["__default__"][:processes].values.first
+
+      assert_equal process["config"]["stdall"], parsed_process[:stdout]
+      assert_equal process["config"]["stdall"], parsed_process[:stderr]
+    end
   end
 end
