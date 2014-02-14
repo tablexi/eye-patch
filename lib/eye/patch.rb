@@ -22,6 +22,17 @@ module Eye::Patch
       Application.new(settings))
     config.validate!
 
+    config.applications.values.each do |application|
+      if application[:setup_file]
+        @setup_file = File.join(application[:working_dir], application[:setup_file])
+        break
+      end
+    end
+
     config
+  end
+
+  def self.setup_file
+    @setup_file
   end
 end

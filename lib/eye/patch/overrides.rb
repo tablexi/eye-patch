@@ -32,7 +32,14 @@ Eye::Controller.class_eval do
   private
 
   def parse_config(filename)
-    Eye::Patch.parse(filename)
+    config = Eye::Patch.parse(filename)
+
+    if Eye::Patch.setup_file
+      info "Loading setup from: #{Eye::Patch.setup_file}"
+      require Eye::Patch.setup_file
+    end
+
+    config
   end
 end
 
