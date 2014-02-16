@@ -25,20 +25,22 @@ Eye::System.class_eval do
     private
 
     def spawn_options(config = {})
-      o = {pgroup: true, chdir: config[:working_dir] || '/'}
-      o.update(out: [config[:stdout], 'a']) if config[:stdout]
-      o.update(err: [config[:stderr], 'a']) if config[:stderr]
-      o.update(in: config[:stdin]) if config[:stdin]
-      o.update(close_others: !config[:preserve_fds])
+      options = {
+        pgroup: true,
+        chdir: config[:working_dir] || '/',
+        close_others: !config[:preserve_fds] }
+
+      options[:out]   = [config[:stdout], 'a'] if config[:stdout]
+      options[:err]   = [config[:stderr], 'a'] if config[:stderr]
+      options[:in]    = config[:stdin] if config[:stdin]
+      options[:umask] = config[:umask] if config[:umask]
 
       if Eye::Local.root?
-        o.update(uid: Etc.getpwnam(config[:uid]).uid) if config[:uid]
-        o.update(gid: Etc.getpwnam(config[:gid]).gid) if config[:gid]
+        options[:uid] = Etc.getpwnam(config[:uid]).uid if config[:uid]
+        options[:gid] = Etc.getpwnam(config[:gid]).gid if config[:gid]
       end
 
-      o.update(umask: config[:umask]) if config[:umask]
-
-      o
+      options
     end
   end
 end
@@ -46,6 +48,7 @@ end
 Eye::Controller.class_eval do
 
   def invoke_spawn_callback
+    debug "Attempting before_spawn hook"
     if respond_to?(:before_spawn)
       debug "Invoking before_spawn hook"
       before_spawn
