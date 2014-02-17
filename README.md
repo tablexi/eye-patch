@@ -102,6 +102,56 @@ The above configuration will spin up a number of processes equal to `count`, res
 
 This approach pairs well with the `daemonize: true` option, as `eye` will have control over the creation and management of the enumerated PID files.
 
+### Monkey-Patching
+
+`Eye::Patch` can't cover all possible use cases, so instead, it supplies a few hooks to allow you to inject your own behavior into `eye` during initial load.
+
+#### Defining a Setup File
+
+For the application specified in your configuration file, you can specify a `setup_file` directive, which will tell `Eye::Patch` to load the specified file (relative to the working directory for the application) immediately after parsing your configuration.
+
+This can be used to inject any desired behavior or hooks into `eye`. For example:
+
+`working-dir/config/eye.rb`:
+
+    #!/usr/bin/env/ruby
+
+    Eye::Control.settings[:my_key] = "SOME_KEY"
+
+    Eye::Controller.class_eval do
+      def before_spawn
+        reader, writer = ::IO.pipe.map(&:binmode)
+        reader.close_on_exec = false
+        writer.close_on_exec = true
+
+        ENV["MY_FD"] = reader.to_i.to_s
+
+        writer << Eye::Control.settings[:my_key]
+        writer.flush
+        writer.close
+      end
+    end
+
+`working-dir/config/eye.yml`:
+
+    ...
+    application:
+      working_dir: working-dir
+      setup_file: config/eye.rb
+    ...
+
+#### Using a `before_spawn` Hook
+
+If you need to invoke some code before spawning a process (for example, if you want to make a file descriptor available to your new child process), you can accomplish this by patching `Eye::Controller` with a `#before_spawn` method in your setup file. This method will be invoked prior to `Eye::System` calling `Process.spawn`.
+
+See above for more instructions on how to define this hook during setup.
+
+#### Working with File Descriptors
+
+Note that if you _do_ need to persist file descriptors for a daemonized process, you'll want to set the `preserve_fds: true` option for that particular process in your configuration file. `Process.spawn`'s default behavior closes all non-standard file descriptors; this option will ensure that they remain open.
+
+Note also that since Ruby 2.0, file descriptors are closed when a process is invoked through `bundle exec`. From versions 1.5 and above, you can pass the `--keep-file-descriptors` flag to `bundle exec` to prevent this behavior.
+
 ### Running Locally
 
 You can test your configurations locally by running the `eye-patch` binary like so:
