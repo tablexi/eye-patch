@@ -23,16 +23,10 @@ module Eye::Patch
     config.validate!
 
     config.applications.values.each do |application|
-      if application[:setup_file]
-        @setup_file = File.join(application[:working_dir], application[:setup_file])
-        break
-      end
+      next unless application[:setup_file]
+      require File.join(application[:working_dir], application[:setup_file])
     end
 
     config
-  end
-
-  def self.setup_file
-    @setup_file
   end
 end
