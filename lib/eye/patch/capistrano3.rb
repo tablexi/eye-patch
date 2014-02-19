@@ -4,6 +4,7 @@ namespace :load do
     set :eye_config, -> { "config/eye.yml" }
     set :eye_bin, -> { "eye-patch" }
     set :eye_roles, -> { :app }
+    set :bundle_bins, fetch(:bundle_bins, []).push(fetch(:eye_bin))
   end
 end
 
@@ -13,7 +14,7 @@ namespace :eye do
   task :load_config do
     on roles(fetch(:eye_roles)) do
       within current_path do
-        execute :gem, "#{fetch(:eye_bin)} l #{fetch(:eye_config)}"
+        execute fetch(:eye_bin), "l #{fetch(:eye_config)}"
       end
     end
   end
@@ -22,8 +23,8 @@ namespace :eye do
   task :stop do
     on roles(fetch(:eye_roles)) do
       within current_path do
-        execute :gem, "#{fetch(:eye_bin)} stop all"
-        execute :gem, "#{fetch(:eye_bin)} q"
+        execute fetch(:eye_bin), "stop all"
+        execute fetch(:eye_bin), "q"
       end
     end
   end
@@ -32,7 +33,7 @@ namespace :eye do
   task restart: :load_config do
     on roles(fetch(:eye_roles)) do
       within current_path do
-        execute :gem, "#{fetch(:eye_bin)} r all"
+        execute fetch(:eye_bin), "r all"
       end
     end
   end
