@@ -38,8 +38,6 @@ namespace :eye do
 end
 
 if fetch(:eye_default_hooks, true)
-  after "deploy:stop",       "eye:stop"
-  after "deploy:start",      "eye:load_config"
   after "deploy:publishing", "deploy:restart"
 
   namespace :deploy do
