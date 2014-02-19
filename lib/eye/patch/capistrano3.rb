@@ -28,7 +28,7 @@ namespace :eye do
   end
 
   desc "Restart all tasks monitored by eye"
-  task :restart do
+  task restart: :load_config do
     on roles(fetch(:eye_roles)) do
       within current_path do
         execute "#{fetch(:eye_bin)} r all"
@@ -38,9 +38,13 @@ namespace :eye do
 end
 
 if fetch(:eye_default_hooks, true)
-  after  "deploy:stop",    "eye:stop"
-  after  "deploy:start",   "eye:load_config"
-  before "deploy:restart", "eye:restart"
-end
+  after "deploy:stop",       "eye:stop"
+  after "deploy:start",      "eye:load_config"
+  after "deploy:publishing", "deploy:restart"
 
-before "eye:restart", "eye:load_config"
+  namespace :deploy do
+    task :restart do
+      invoke "eye:restart"
+    end
+  end
+end
