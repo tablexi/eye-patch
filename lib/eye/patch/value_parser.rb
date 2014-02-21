@@ -4,8 +4,8 @@ module Eye::Patch
 
   class ValueParser
 
-    TIME_MATCHER = / (?<duration>(week|day|hour|minute|second)s?)( |\Z)/.freeze
-    SIZE_MATCHER = / (?<size>(tera|giga|mega|kilo)?bytes?)( |\Z)/.freeze
+    TIME_MATCHER = /\s(?<duration>(?:week|day|hour|minute|second)s?)(?:\s|\Z)/.freeze
+    SIZE_MATCHER = /\s(?<size>(?:tera|giga|mega|kilo)?bytes?)(?:\s|\Z)/.freeze
     MATCHERS     = {
       time: TIME_MATCHER,
       size: SIZE_MATCHER }.freeze
