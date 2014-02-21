@@ -16,7 +16,7 @@ describe Eye::Patch::ValueParser do
     assert_equal 1.terabyte, Eye::Patch::ValueParser.parse("1 terabyte  ")
   end
 
-  it "uses strict word boundary characters" do
+  it "uses whitespace as word boundary characters" do
     assert_equal "second-thing", Eye::Patch::ValueParser.parse("second-thing")
     assert_equal "minutes", Eye::Patch::ValueParser.parse("minutes")
   end
