@@ -13,6 +13,7 @@ describe Eye::Patch::ValueParser do
     assert_equal 3.2.gigabytes, Eye::Patch::ValueParser.parse("3.2 gigabytes")
     assert_equal 2.4.megabytes, Eye::Patch::ValueParser.parse("2.4 megabytes")
     assert_equal 1.kilobyte, Eye::Patch::ValueParser.parse("1 kilobyte")
+    assert_equal 1.terabyte, Eye::Patch::ValueParser.parse("1 terabyte  ")
   end
 
   it "uses strict word boundary characters" do
