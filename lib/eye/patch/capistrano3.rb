@@ -17,6 +17,7 @@ namespace :eye do
   task :load_config do
     on roles(fetch(:eye_roles)) do
       within current_path do
+        execute fetch(:eye_bin), "q"
         execute fetch(:eye_bin), "l #{fetch(:eye_config)}"
       end
     end
