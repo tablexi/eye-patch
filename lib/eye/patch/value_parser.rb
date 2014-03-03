@@ -11,6 +11,8 @@ module Eye::Patch
       size: SIZE_MATCHER }.freeze
 
     def self.parse(value)
+      return value unless value.is_a?(String)
+
       result = MATCHERS.detect do |match_type, matcher|
         break send(:"parse_#{match_type}", value) if value.match(matcher)
       end

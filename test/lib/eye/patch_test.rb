@@ -2,13 +2,13 @@ require_relative "../../test_helper"
 
 describe Eye::Patch do
   before do
-    @fixture = File.expand_path(File.join(File.dirname(__FILE__), %w[.. .. fixtures test.yml]))
-    @original = YAML.load(File.open(@fixture))
+    Eye::Config.any_instance.stubs(:validate!)
   end
 
   describe ".parse" do
     before do
-      Eye::Config.any_instance.stubs(:validate!)
+      @fixture = File.expand_path(File.join(File.dirname(__FILE__), %w[.. .. fixtures test.yml]))
+      @original = YAML.load(File.open(@fixture))
       @parsed = Eye::Patch.parse(@fixture)
 
       @settings = @parsed.settings
@@ -37,17 +37,18 @@ describe Eye::Patch do
       trigger = @original["triggers"].first
       parsed_trigger = @application[:triggers][trigger["name"].to_sym]
 
-      assert_equal trigger["config"]["times"], parsed_trigger[:times]
-      assert_equal Eye::Patch::ValueParser.parse(trigger["config"]["within"]), parsed_trigger[:within]
+      %w(times within).each do |setting|
+        assert_equal Eye::Patch::ValueParser.parse(trigger["config"][setting]), parsed_trigger[setting.to_sym]
+      end
     end
 
     it "parses checks" do
       check = @original["checks"].first
       parsed_check = @application[:checks][check["name"].to_sym]
 
-      assert_equal check["config"]["times"], parsed_check[:times]
-      assert_equal Eye::Patch::ValueParser.parse(check["config"]["every"]), parsed_check[:every]
-      assert_equal Eye::Patch::ValueParser.parse(check["config"]["below"]), parsed_check[:below]
+      %w(times every below).each do |setting|
+        assert_equal Eye::Patch::ValueParser.parse(check["config"][setting]), parsed_check[setting.to_sym]
+      end
     end
 
     it "splits processes into groups" do
@@ -86,6 +87,38 @@ describe Eye::Patch do
 
       assert_equal process["config"]["stdall"], parsed_process[:stdout]
       assert_equal process["config"]["stdall"], parsed_process[:stderr]
+    end
+  end
+
+  describe ".parse with per-process overrides" do
+    before do
+      @fixture = File.expand_path(File.join(File.dirname(__FILE__), %w[.. .. fixtures overrides.yml]))
+      @original = YAML.load(File.open(@fixture))
+      @parsed = Eye::Patch.parse(@fixture)
+
+      @settings = @parsed.settings
+      @applications = @parsed.applications
+      @application = @applications.values.first
+    end
+
+    it "loads per-process triggers" do
+      process = @application[:groups]["__default__"][:processes].values.first
+      trigger = @original["processes"].detect { |p| p["name"] == process[:name] }["triggers"].first
+      parsed_trigger = process[:triggers][trigger["name"].to_sym]
+
+      %w(times within).each do |setting|
+        assert_equal Eye::Patch::ValueParser.parse(trigger["config"][setting]), parsed_trigger[setting.to_sym]
+      end
+    end
+
+    it "loads per-process checks" do
+      process = @application[:groups]["__default__"][:processes].values.first
+      check = @original["processes"].detect { |p| p["name"] == process[:name] }["checks"].first
+      parsed_check = process[:checks][check["name"].to_sym]
+
+      %w(times every below).each do |setting|
+        assert_equal Eye::Patch::ValueParser.parse(check["config"][setting]), parsed_check[setting.to_sym]
+      end
     end
   end
 end

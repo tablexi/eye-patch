@@ -71,6 +71,22 @@ Note that memory and duration values are written in plain english. See `lib/eye/
 
 Processes will inherit all configurations from the main application. All process options supported by `eye` are available by using the appropriate key in the `config` block.
 
+##### Checks and Triggers
+
+You can define per-process checks and triggers by defining a `checks` or `triggers` block within the process definition. 
+
+    processes:
+      - name: my-process
+        checks:
+          - name: memory
+            config:
+              times: 3
+              every: 10 seconds
+              below: 52 megabytes
+    ...
+
+Any check or trigger already defined at the application level will be overwritten with the new configuration. Application-level checks and triggers which are not redefined for the process will be persisted.
+
 ##### Grouping
 
 Rather than using the `eye` DSL's nesting approaching to setting up processes within groups, `Eye::Patch` simply needs a `group` attribute to be added to the process definition.
@@ -180,5 +196,4 @@ See `lib/eye/patch/capistrano.rb` for a list of available configuration options.
 
 ## Coming Soon
 
-- Proper support for per-process triggers and checks.
 - Process templates for commonly-used libraries (unicorn, sidekiq, delayed_jobs).

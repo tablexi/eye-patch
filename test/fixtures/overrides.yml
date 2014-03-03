@@ -1,0 +1,39 @@
+name: Test Application With Per-Process Overrides
+
+config:
+  logger: /path/to/log/eye.log
+
+application:
+  working_dir: /path/to/application
+
+triggers:
+  - name: flapping
+    config:
+      times: 10
+      within: 1 minute
+
+checks:
+  - name: memory
+    config:
+      times: 3
+      every: 20 seconds
+      below: 1.5 gigabytes
+
+processes:
+  - name: my-process
+    triggers:
+      - name: flapping
+        config:
+          times: 6
+          within: 40 seconds
+    checks:
+      - name: memory
+        config:
+          times: 2
+          every: 15 seconds
+          below: 1.2 megabytes
+    config:
+      start_timeout: 25 seconds
+      start_command: bundle exec my-process
+      pid_file: tmp/pids/my-process.pid
+      stdall: log/my-process.log
