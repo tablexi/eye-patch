@@ -21,7 +21,7 @@ module Eye::Patch
     end
 
     def parse_configuration
-      @config = (@settings[:application] || {}).merge(
+      @config = @settings.fetch(:application, {}).merge(
         name: @settings[:name],
         notify: notifications,
         triggers: triggers,

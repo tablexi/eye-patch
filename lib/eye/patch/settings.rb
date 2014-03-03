@@ -1,15 +1,15 @@
+require "erb"
+require "forwardable"
 require_relative "value_parser"
 
 module Eye::Patch
 
   class Settings
+    extend Forwardable
+    def_delegators :parsed, :[], :fetch
 
     def initialize(filename)
-      @settings = YAML.load(File.open(filename))
-    end
-
-    def [](value)
-      parsed[value]
+      @settings = YAML.load(ERB.new(File.read(filename)).result)
     end
 
     private
