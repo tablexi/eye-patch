@@ -7,6 +7,53 @@ Eye::Cli.class_eval do
   end
 end
 
+require "eye/utils/mini_active_support"
+Eye::Process.class_eval do
+
+  def daemonize_process
+    time_before = Time.now
+    res = Eye::System.daemonize(self[:start_command], config)
+    start_time = Time.now - time_before
+
+    info "daemonizing: `#{self[:start_command]}` with start_grace: #{self[:start_grace].to_f}s, env: #{self[:environment].inspect}, working_dir: #{self[:working_dir]}, <#{res[:pid]}>"
+
+    if res[:error]
+
+      if res[:error].message == 'Permission denied - open'
+        error "daemonize failed with #{res[:error].inspect}; make sure #{[self[:stdout], self[:stderr]]} are writable"
+      else
+        error "daemonize failed with #{res[:error].inspect}"
+      end
+
+      return {:error => res[:error].inspect}
+    end
+
+    self.pid = res[:pid]
+
+    unless self.pid
+      error 'no pid was returned'
+      return {:error => :empty_pid}
+    end
+
+    sleep_grace(:start_grace)
+
+    unless process_really_running?
+      error "process <#{self.pid}> not found, it may have crashed (#{check_logs_str})"
+      return {:error => :not_really_running}
+    end
+
+    unless !self[:smart_pid] && failsafe_save_pid
+      return {:error => :cant_write_pid}
+    end
+
+    res
+  end
+
+  def control_pid?
+    !!self[:daemonize] && !self[:smart_pid]
+  end
+end
+
 Eye::System.class_eval do
   class << self
     alias_method :daemonize_without_hook, :daemonize

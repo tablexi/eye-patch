@@ -168,6 +168,12 @@ Note that if you _do_ need to persist file descriptors for a daemonized process,
 
 Note also that since Ruby 2.0, file descriptors are closed when a process is invoked through `bundle exec`. From versions 1.5 and above, you can pass the `--keep-file-descriptors` flag to `bundle exec` to prevent this behavior.
 
+#### Managing Pidfiles
+
+By default, `eye` will attempt to manage the pidfile for any process with the `daemonize: true` flag. In certain cases, this may be undesirable. For example, [`unicorn`](https://github.com/defunkt/unicorn) attempts to manage its own pid, which is necessary for zero-downtime deploys.
+
+To get around this problem, you can supply the `smart_pid: true` option in a process's config hash. This will instruct eye to trust the daemonized process to manage its own pid.
+
 ### Running Locally
 
 You can test your configurations locally by running the `eye-patch` binary like so:
