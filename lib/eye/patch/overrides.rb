@@ -42,7 +42,8 @@ Eye::Process.class_eval do
       return {:error => :not_really_running}
     end
 
-    unless !self[:smart_pid] && failsafe_save_pid
+    if !self[:smart_pid] && !failsafe_save_pid
+      error "expected to manage pidfile for process <#{self.pid}>; pidfile is unwritable"
       return {:error => :cant_write_pid}
     end
 
