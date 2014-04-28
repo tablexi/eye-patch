@@ -192,6 +192,14 @@ For standard capistrano deployments with bundler, this should be enough. If you 
 
 See `lib/eye/patch/capistrano.rb` for a list of available configuration options.
 
+If you're on Capistrano 3, you'll want:
+
+    require "eye/patch/capistrano3"
+
+If you're specifically using `Eye::Patch` in conjunction with a Rails project, you may need to add the following to your deploy file:
+
+    set :eye_env, -> { {rails_env: fetch(:rails_env)} }
+
 ## Contributing
 
 1. Fork it
