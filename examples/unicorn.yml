@@ -4,7 +4,7 @@ processes:
   - name: unicorn
     config:
       pid_file: tmp/pids/unicorn.pid
-      start_command: bundle exec unicorn -Dc config/unicorn/<%= ENV['RAILS_ENV'] %>.rb
+      start_command: bundle exec unicorn -Dc config/unicorn/production.rb
       restart_command: "kill -USR2 {PID}"
       user_commands:
         rotate: "kill -USR1 {PID}" # Requires eye >= 0.6.4
