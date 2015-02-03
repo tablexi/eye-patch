@@ -1,0 +1,14 @@
+# Thin cluster
+
+processes:
+  - name: Thin
+    count: 3
+    config:
+      pid_file: "tmp/pids/thin.{ID}.pid"
+      start_command: "bundle exec thin start -S /tmp/thin-www.example.com.{ID}.socket -P tmp/pids/thin.{ID}.pid -L log/thin.{ID}.log"
+      stop_command: "bundle exec thin stop -P tmp/pids/thin.{ID}.pid"
+      restart_command: "bundle exec thin restart -P tmp/pids/thin.{ID}.pid"
+      start_timeout: 30 seconds
+      restart_timeout: 30 seconds
+      stdall: "log/thin.{ID}.log"
+      daemonize: true

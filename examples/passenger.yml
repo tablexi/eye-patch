@@ -1,0 +1,15 @@
+# Passenger process
+
+processes:
+  - name: passenger
+    config:
+      pid_file: tmp/pids/passenger.pid
+      start_command: bundle exec passenger start -S /tmp/passenger-www.example.com.socket -d
+      stop_command: bundle exec passenger stop --pid-file tmp/pids/passenger.pid
+      user_comands:
+        rotate: touch tmp/restart.txt
+      start_timeout: 30 seconds
+      start_grace: 30 seconds
+      restart_timeout: 30 seconds
+      restart_grace: 30 seconds
+      stdall: log/passenger.log

@@ -1,0 +1,14 @@
+# delayed_job process
+
+processes:
+  - name: delayed_job
+    config:
+      start_command: ./bin/delayed_job start # /script/delayed_job for older releases
+      stop_command: ./bin/delayed_job stop # /script/delayed_job for older releases
+      pid_file: tmp/pids/delayed_job.pid
+      user_commands:
+        rotate: "kill -USR2 {PID}" # Requires eye >= 0.6.4
+      start_timeout: 30 seconds
+      start_grace: 30 seconds
+      restart_timeout: 30 seconds
+      restart_grace: 30 seconds

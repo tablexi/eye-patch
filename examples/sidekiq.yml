@@ -1,0 +1,11 @@
+# sidekiq process
+
+processes:
+  - name: sidekiq
+    config:
+      start_command: bundle exec sidekiq --config config/sidekiq.yml --daemon --logfile log/sidekiq.log
+      stop_command: bundle exec sidekiqctl shutdown tmp/pids/sidekiq.pid
+      user_commands:
+        rotate: "kill -USR2 {PID}" # Requires eye >= 0.6.4
+      stdall: log/sidekiq.log
+      pid_file: tmp/pids/sidekiq.pid
