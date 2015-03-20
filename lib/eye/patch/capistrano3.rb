@@ -19,8 +19,8 @@ namespace :eye do
     on roles(fetch(:eye_roles)) do
       within current_path do
         with fetch(:eye_env) do
-          execute fetch(:eye_bin), "q"
-          execute fetch(:eye_bin), "l #{fetch(:eye_config)}"
+          execute fetch(:eye_bin), "quit"
+          execute fetch(:eye_bin), "load #{fetch(:eye_config)}"
         end
       end
     end
@@ -32,7 +32,7 @@ namespace :eye do
       within current_path do
         with fetch(:eye_env) do
           execute fetch(:eye_bin), "stop all"
-          execute fetch(:eye_bin), "q"
+          execute fetch(:eye_bin), "quit"
         end
       end
     end
@@ -43,7 +43,7 @@ namespace :eye do
     on roles(fetch(:eye_roles)) do
       within current_path do
         with fetch(:eye_env) do
-          execute fetch(:eye_bin), "r all"
+          execute fetch(:eye_bin), "restart all"
         end
       end
     end

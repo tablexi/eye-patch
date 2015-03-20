@@ -15,17 +15,19 @@ Capistrano::Configuration.instance.load do
 
     desc "Start eye with the desired configuration file"
     task :load_config, roles: -> { fetch(:eye_roles) } do
-      run "cd #{current_path} && #{fetch(:eye_bin)} q && #{fetch(:eye_bin)} l #{fetch(:eye_config)}"
+      run "cd #{current_path} && #{fetch(:eye_bin)} quit"
+      run "cd #{current_path} && #{fetch(:eye_bin)} load #{fetch(:eye_config)}"
     end
 
     desc "Stop eye and all of its monitored tasks"
     task :stop, roles: -> { fetch(:eye_roles) } do
-      run "cd #{current_path} && #{fetch(:eye_bin)} stop all && #{fetch(:eye_bin)} q"
+      run "cd #{current_path} && #{fetch(:eye_bin)} stop all"
+      run "cd #{current_path} && #{fetch(:eye_bin)} quit"
     end
 
     desc "Restart all tasks monitored by eye"
     task :restart, roles: -> { fetch(:eye_roles) } do
-      run "cd #{current_path} && #{fetch(:eye_bin)} r all"
+      run "cd #{current_path} && #{fetch(:eye_bin)} restart all"
     end
   end
 
