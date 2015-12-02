@@ -8,7 +8,7 @@ rescue LoadError
 end
 
 begin
-  require "eye/notify/aws_sdk"
+  require "eye/notify/awssdk"
 rescue LoadError
   # Don't worry about loading the aws_sdk notifier when
   # `aws-sdk-core` is unavailable
