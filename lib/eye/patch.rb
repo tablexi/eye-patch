@@ -10,7 +10,8 @@ end
 begin
   require "eye/notify/aws_sdk"
 rescue LoadError
-  # Don't worry about loading the aws_sdk notifier when `aws-sdk-core` is unavailable
+  # Don't worry about loading the aws_sdk notifier when
+  # `aws-sdk-core` is unavailable
 end
 
 module Eye::Patch
