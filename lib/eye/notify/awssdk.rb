@@ -2,7 +2,7 @@ require "aws-sdk-core"
 require "aws-sdk-core/ses"
 
 module Eye
-  module Notify
+  class Notify
     class AWSSDK < Eye::Notify
       param :region, String, true
       param :access_key_id, String, true
@@ -39,5 +39,3 @@ module Eye
     end
   end
 end
-
-Eye::Notify::TYPES[:aws_sdk] = "AWSSDK"
