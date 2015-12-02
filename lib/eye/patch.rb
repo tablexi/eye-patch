@@ -7,6 +7,12 @@ rescue LoadError
   # Don't worry about loading the ses notifier when `aws/ses` is unavailable
 end
 
+begin
+  require "eye/notify/aws_sdk"
+rescue LoadError
+  # Don't worry about loading the aws_sdk notifier when `aws-sdk-core` is unavailable
+end
+
 module Eye::Patch
 
   require "eye/patch/settings"
