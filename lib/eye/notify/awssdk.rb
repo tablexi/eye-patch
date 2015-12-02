@@ -4,15 +4,18 @@ require "aws-sdk-core/ses"
 module Eye
   class Notify
     class AWSSDK < Eye::Notify
-      param :region, String, true
-      param :access_key_id, String, true
-      param :secret_access_key, String, true
+      param :region, String
+      param :access_key_id, String
+      param :secret_access_key, String
       param :from, String, true
 
       def execute
-        client = Aws::SES::Client.new(
-          region: region,
-          credentials: Aws::Credentials.new(access_key_id, secret_access_key))
+        options = { region: "us-east-1" } # default to us-east-1
+        options[:region] = region if region
+        if access_key_id && secret_access_key
+          options[:credentials] = Aws::Credentials.new(access_key_id, secret_access_key)
+        end
+        client = Aws::SES::Client.new(options)
         client.send_email(message)
       end
 
