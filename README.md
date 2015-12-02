@@ -28,28 +28,63 @@ Or install it yourself as:
 
 `Eye::Patch` forgoes granular process-level notification in favor of setting up application-wide notifications for different reporting levels. The following configuration will send all error notifications to the described contact via Amazon's SES service.
 
-    notifications:
-      - name: admin
-        type: ses
-        level: error
-        contact: test+admin@example.com
-        config:
-          from: eye+notifications@example.com
-          access_key_id: Your+AWS+Access+Key+ID
-          secret_access_key: Your+AWS+Secret+Access+Key
+Note that SES support will only be provided if a necessary gem is installed on the system.
 
-Note that SES support will only be provided if the [`aws-ses`](https://github.com/drewblas/aws-ses) gem is available on the system.
+`Eye::Patch` supports 2 different SES-backed gems:
+
+1. If the [`aws-ses`](https://github.com/drewblas/aws-ses) gem is available on the system, use the `type: ses` setting.
+
+  Example configuration:
+
+      notifications:
+        - name: crash # this name must match the "notify" target of the process.
+          type: ses # for aws-ses
+          level: error
+          contact: test+admin@example.com
+          config:
+            from: eye+notifications@example.com
+            access_key_id: Your+AWS+Access+Key+ID
+            secret_access_key: Your+AWS+Secret+Access+Key
+
+2. If the [`aws-sdk`](https://github.com/aws/aws-sdk-ruby/) gem is available on the system, use the `type: aws_sdk` setting. (Note: usually this gem is installed as a consequence of installing [aws-sdk-rails](https://github.com/aws/aws-sdk-rails)).
+
+  Example configuration:
+
+      notifications:
+        - name: crash # this name must match the "notify" target of the process.
+          type: aws_sdk # for aws-sdk
+          level: error
+          contact: test+admin@example.com
+          config:
+            from: eye+notifications@example.com
+            region: us-east-1 # NOTE: the 'region' is required for aws-sdk
+            access_key_id: Your+AWS+Access+Key+ID
+            secret_access_key: Your+AWS+Secret+Access+Key
+
+
+In either case above, an example notification block for monitored process:
+
+    processes:
+      - name: unicorn
+        config:
+          pid_file: tmp/pids/unicorn.pid
+          start_command: bundle exec unicorn -c config/unicorn/<%= ENV["RAILS_ENV"] %>.rb -D
+          ....
+          monitor_children:
+            stop_command: "kill -QUIT {PID}"
+          notify:
+            crash: error # this must match the "name" of the notification above
 
 #### Triggers/Checks
 
-Triggers and checks are set up much like `eye`'s basic DSL. All trigger and check types available in `eye` are supported. 
+Triggers and checks are set up much like `eye`'s basic DSL. All trigger and check types available in `eye` are supported.
 
     triggers:
       - name: flapping
         config:
           times: 10
           within: 1 minute
-    
+
     checks:
       - name: memory
         config:
@@ -73,7 +108,7 @@ Processes will inherit all configurations from the main application. All process
 
 ##### Checks and Triggers
 
-You can define per-process checks and triggers by defining a `checks` or `triggers` block within the process definition. 
+You can define per-process checks and triggers by defining a `checks` or `triggers` block within the process definition.
 
     processes:
       - name: my-process
