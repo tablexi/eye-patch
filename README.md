@@ -57,9 +57,10 @@ Note that SES support will only be provided if a necessary gem is installed on t
           contact: test+admin@example.com
           config:
             from: eye+notifications@example.com
-            region: us-east-1 # NOTE: the 'region' is required for aws-sdk
-            access_key_id: Your+AWS+Access+Key+ID
-            secret_access_key: Your+AWS+Secret+Access+Key
+            region: us-east-1 # optional
+            # NOTE: the default region is us-east-1. It can be overriden.
+            access_key_id: Your+AWS+Access+Key+ID # optional
+            secret_access_key: Your+AWS+Secret+Access+Key # optional
 
 
 In either case above, an example notification block for monitored process:
