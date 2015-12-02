@@ -19,5 +19,3 @@ class Eye::Notify::SES < Eye::Notify
       text_body: message_body }
   end
 end
-
-Eye::Notify::TYPES[:ses] = "SES"

@@ -39,5 +39,3 @@ module Eye
     end
   end
 end
-
-Eye::Notify::TYPES[:aws_sdk] = "AWSSDK"

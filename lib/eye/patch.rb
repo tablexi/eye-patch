@@ -1,17 +1,14 @@
 require "eye"
 require "eye/patch/overrides"
 
-begin
-  require "eye/notify/ses"
-rescue LoadError
-  # Don't worry about loading the ses notifier when `aws/ses` is unavailable
-end
+Eye::Notify::TYPES[:ses] = "SES"
+Eye::Notify::TYPES[:aws_sdk] = "AWSSDK"
 
-begin
-  require "eye/notify/awssdk"
-rescue LoadError
-  # Don't worry about loading the aws_sdk notifier when
-  # `aws-sdk-core` is unavailable
+module Eye
+  class Notify
+    autoload :SES, "eye/notify/ses"
+    autoload :AWSSDK, "eye/notify/awssdk"
+  end
 end
 
 module Eye::Patch
