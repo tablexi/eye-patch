@@ -9,7 +9,11 @@ module Eye::Patch
     def_delegators :parsed, :[], :fetch
 
     def initialize(filename)
-      @settings = YAML.load(ERB.new(File.read(filename)).result)
+      file = File.new(filename)
+      erb = ERB.new(file.read)
+      erb.filename = file.path
+
+      @settings = YAML.load(erb.result)
     end
 
     private
