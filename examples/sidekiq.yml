@@ -1,5 +1,18 @@
 # sidekiq process
 
+# NOTE: this config assumes that `config/sidekiq.yml` declares
+# that the pid at tmp/pids/sidekiq.pid
+#
+#
+# Example sidekiq.yml:
+#
+# :concurrency: 5
+# :pidfile: tmp/pids/sidekiq.pid
+# staging:
+# production:
+# :queues:
+#   - default
+
 processes:
   - name: sidekiq
     config:
