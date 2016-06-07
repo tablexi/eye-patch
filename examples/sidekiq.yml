@@ -1,18 +1,4 @@
 # sidekiq process
-
-# NOTE: this config assumes that `config/sidekiq.yml` declares
-# that the pid at tmp/pids/sidekiq.pid
-#
-#
-# Example sidekiq.yml:
-#
-# :concurrency: 5
-# :pidfile: tmp/pids/sidekiq.pid
-# staging:
-# production:
-# :queues:
-#   - default
-
 processes:
   - name: sidekiq
     config:
@@ -21,4 +7,4 @@ processes:
       user_commands:
         rotate: "kill -USR2 {PID}" # Requires eye >= 0.6.4
       stdall: log/sidekiq.log
-      pid_file: tmp/pids/sidekiq.pid
+      pid_file: tmp/pids/sidekiq.pid # must correspond to the pidfile specified in sidekiq's config
