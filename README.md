@@ -8,7 +8,7 @@ The goal of this gem is to make eye process monitoring easier to set up, manage,
 
 Add this line to your application's Gemfile:
 
-    gem "eye-patch"
+    gem "eye-patch", require: false
 
 And then execute:
 
@@ -228,7 +228,7 @@ For standard capistrano deployments with bundler, this should be enough. If you 
 
 See `lib/eye/patch/capistrano.rb` for a list of available configuration options.
 
-If you're on Capistrano 3, you'll want:
+If you're on Capistrano 3, you'll want to add the following to the `Capfile`:
 
     require "eye/patch/capistrano3"
 
