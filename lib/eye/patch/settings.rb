@@ -14,6 +14,8 @@ module Eye::Patch
       erb.filename = file.path
 
       @settings = YAML.load(erb.result)
+    ensure
+      file.close unless file.nil?  
     end
 
     private
