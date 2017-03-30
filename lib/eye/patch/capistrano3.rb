@@ -26,6 +26,9 @@ namespace :eye do
     end
   end
 
+  desc "Start eye with the desired configuration file"
+  task :start, :load_config
+
   desc "Stop eye and all of its monitored tasks"
   task :stop do
     on roles(fetch(:eye_roles)) do
