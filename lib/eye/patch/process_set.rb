@@ -41,6 +41,15 @@ module Eye::Patch
 
       self[name][:triggers] = self[name][:triggers].merge(monitors[:triggers])
       self[name][:checks] = self[name][:checks].merge(monitors[:checks])
+
+      return unless config[:monitor_children]
+      return unless config[:monitor_children][:checks]
+
+      monitor_options = OptionSet.new(
+        Eye::Checker,
+        config[:monitor_children][:checks])
+
+      self[name][:monitor_children][:checks] = monitor_options
     end
 
     def indexed_config(config, index)

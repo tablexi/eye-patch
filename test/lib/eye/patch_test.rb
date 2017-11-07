@@ -76,6 +76,21 @@ describe Eye::Patch do
       end
     end
 
+    it "loads children-level checks" do
+      process = @application[:groups]["__default__"][:processes].values.first
+      process_config = @original["processes"].detect do |p|
+        p["name"] == process[:name]
+      end
+      check = process_config["config"]["monitor_children"]["checks"].first
+      parsed_check = process[:monitor_children][:checks][check["name"].to_sym]
+
+      %w(times every below).each do |setting|
+        assert_equal(
+          Eye::Patch::ValueParser.parse(check["config"][setting]),
+          parsed_check[setting.to_sym])
+      end
+    end
+
     it "passes application configurations down to processes" do
       process = @application[:groups]["__default__"][:processes].values.first
       assert_equal @application[:triggers], process[:triggers]

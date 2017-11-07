@@ -34,6 +34,13 @@ processes:
       start_command: bundle exec my-process
       pid_file: tmp/pids/my-process.pid
       stdall: log/my-process.log
+      monitor_children:
+        checks:
+          - name: memory
+            config:
+              times: 2
+              every: 10 seconds
+              below: 512 megabytes
   - name: first-grouped-process
     group: my-group
     config:
