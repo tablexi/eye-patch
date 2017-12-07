@@ -1,5 +1,12 @@
 require "aws-sdk-core"
-require "aws-sdk-core/ses"
+
+begin
+  # aws-sdk gem version 2.x includes the SES code as a sub-module
+  require "aws-sdk-core/ses"
+rescue LoadError
+  # aws-sdk gem version 3.x includes the SES code as a separate aws-sdk-ses gem
+  require "aws-sdk-ses"
+end
 
 module Eye
   class Notify
