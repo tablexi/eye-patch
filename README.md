@@ -32,7 +32,11 @@ Note that SES support will only be provided if a necessary gem is installed on t
 
 `Eye::Patch` supports 2 different SES-backed gems:
 
-1. If the [`aws-ses`](https://github.com/drewblas/aws-ses) gem is available on the system, use the `type: ses` setting.
+1. aws-ses
+
+**Deprecated**: The `aws-sdk-ses` gem is recommended in place of aws-ses, as aws-ses hasn't been maintained in years.
+
+If the [`aws-ses`](https://github.com/drewblas/aws-ses) gem is available on the system, use the `type: ses` setting.
 
   Example configuration:
 
@@ -46,7 +50,14 @@ Note that SES support will only be provided if a necessary gem is installed on t
             access_key_id: Your+AWS+Access+Key+ID
             secret_access_key: Your+AWS+Secret+Access+Key
 
-2. If the [`aws-sdk`](https://github.com/aws/aws-sdk-ruby/) gem is available on the system, use the `type: aws_sdk` setting. (Note: usually this gem is installed as a consequence of installing [aws-sdk-rails](https://github.com/aws/aws-sdk-rails)).
+2. aws-sdk/aws-sdk-ses
+
+If either of the [`aws-sdk`](https://github.com/aws/aws-sdk-ruby/) or [`aws-sdk-ses`](https://github.com/aws/aws-sdk-ruby/) gems are available on the system, use the `type: aws_sdk` setting. (Note: usually one of these gems are installed as a consequence of installing [aws-sdk-rails](https://github.com/aws/aws-sdk-rails)).
+
+Note: As of version 2.x of `aws-sdk-rails`, it only includes `aws-sdk-ses`.
+
+Note: As of version 3.x of `aws-sdk`, you can instead use `aws-sdk-ses` in order to only load the SES portion of the libraries. Before version 2.x of `aws-sdk`, the gem included all of the AWS libraries.
+
 
   Example configuration:
 
