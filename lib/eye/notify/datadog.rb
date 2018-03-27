@@ -30,8 +30,8 @@ module Eye
             alert_type: options[:alert_type],
             msg_title: message_subject,
             host: msg_host,
-            source_type: options[:source_type]
-            tags: options[:tags],
+            source_type: options[:source_type],
+            tags: options[:tags]
           )
         )
       end
