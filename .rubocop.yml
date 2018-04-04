@@ -1,0 +1,44 @@
+inherit_from: .rubocop_todo.yml
+
+Layout/EmptyLinesAroundClassBody:
+  EnforcedStyle: empty_lines
+
+Layout/EmptyLinesAroundModuleBody:
+  EnforcedStyle: empty_lines
+
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+Metrics/BlockLength:
+  Exclude:
+    - lib/eye/patch/capistrano.rb
+    - lib/eye/patch/capistrano3.rb
+    - lib/eye/patch/overrides.rb
+    - test/**/*.rb
+
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - lib/eye/patch/overrides.rb
+
+Metrics/PerceivedComplexity:
+  Exclude:
+    - lib/eye/patch/overrides.rb
+
+Style/Documentation:
+  Enabled: false
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/TrailingCommaInArguments:
+  EnforcedStyleForMultiline: comma
+
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: comma
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: comma
+

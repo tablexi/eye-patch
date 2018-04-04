@@ -19,7 +19,8 @@ module Eye::Patch
         parse_single_process(
           process[:name],
           process[:config],
-          process_monitors(process))
+          process_monitors(process),
+        )
       end
     end
 
@@ -29,7 +30,8 @@ module Eye::Patch
         parse_single_process(
           name,
           indexed_config(process[:config], index),
-          process_monitors(process))
+          process_monitors(process),
+        )
       end
     end
 
@@ -47,7 +49,8 @@ module Eye::Patch
 
       monitor_options = OptionSet.new(
         Eye::Checker,
-        config[:monitor_children][:checks])
+        config[:monitor_children][:checks],
+      )
 
       self[name][:monitor_children][:checks] = monitor_options
     end
@@ -59,8 +62,12 @@ module Eye::Patch
     end
 
     def process_monitors(config)
-      { triggers: OptionSet.new(Eye::Trigger, config[:triggers]),
-        checks: OptionSet.new(Eye::Checker, config[:checks]) }
+      {
+        triggers: OptionSet.new(Eye::Trigger, config[:triggers]),
+        checks: OptionSet.new(Eye::Checker, config[:checks]),
+      }
     end
+
   end
+
 end

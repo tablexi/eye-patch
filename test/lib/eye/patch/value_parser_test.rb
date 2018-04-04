@@ -1,7 +1,6 @@
 require_relative "../../../test_helper"
 
 describe Eye::Patch::ValueParser do
-
   it "parses time values" do
     assert_equal 2.weeks, Eye::Patch::ValueParser.parse("2 weeks")
     assert_equal 1.5.hours, Eye::Patch::ValueParser.parse("1.5 hours")

@@ -1,5 +1,4 @@
 namespace :load do
-
   task :defaults do
     set :eye_config, -> { "config/eye.yml" }
     set :eye_bin, -> { "eye-patch" }
@@ -13,7 +12,6 @@ namespace :load do
 end
 
 namespace :eye do
-
   desc "Start eye with the desired configuration file"
   task :load_config do
     on roles(fetch(:eye_roles)) do

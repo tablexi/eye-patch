@@ -3,8 +3,11 @@
 require "dogapi"
 
 module Eye
+
   class Notify
+
     class DataDog < Eye::Notify
+
       param :aggregation_key, String
       param :alert_type, String
       param :api_key, String, true
@@ -16,7 +19,7 @@ module Eye
           alert_type: "error",
           aggregation_key: msg_host + msg_full_name,
           source_type: "None",
-          tags: ["eye"]
+          tags: ["eye"],
         }
 
         options[:alert_type] = alert_type if alert_type
@@ -24,20 +27,21 @@ module Eye
         options[:source_type] = source_type if source_type
         options[:tags] = tags if tags
 
-        dog = Dogapi::Client.new(api_key)
-
-        dog.emit_event(
-          Dogapi::Event.new(
-            message_body,
-            aggregation_key: options[:aggregation_key],
-            alert_type: options[:alert_type],
-            msg_title: message_subject,
-            host: msg_host,
-            source_type: options[:source_type],
-            tags: options[:tags]
-          )
+        event = Dogapi::Event.new(
+          message_body,
+          aggregation_key: options[:aggregation_key],
+          alert_type: options[:alert_type],
+          msg_title: message_subject,
+          host: msg_host,
+          source_type: options[:source_type],
+          tags: options[:tags],
         )
+
+        Dogapi::Client.new(api_key).emit_event(event)
       end
+
     end
+
   end
+
 end

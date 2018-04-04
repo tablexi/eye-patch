@@ -8,7 +8,7 @@ describe Eye::Patch do
   describe ".parse" do
     before do
       @fixture = File.expand_path(File.join(File.dirname(__FILE__), %w[.. .. fixtures test.yml]))
-      @original = YAML.load(File.open(@fixture))
+      @original = YAML.safe_load(File.open(@fixture))
       @parsed = Eye::Patch.parse(@fixture)
 
       @settings = @parsed.settings
@@ -37,7 +37,7 @@ describe Eye::Patch do
       trigger = @original["triggers"].first
       parsed_trigger = @application[:triggers][trigger["name"].to_sym]
 
-      %w(times within).each do |setting|
+      %w[times within].each do |setting|
         assert_equal Eye::Patch::ValueParser.parse(trigger["config"][setting]), parsed_trigger[setting.to_sym]
       end
     end
@@ -46,7 +46,7 @@ describe Eye::Patch do
       check = @original["checks"].first
       parsed_check = @application[:checks][check["name"].to_sym]
 
-      %w(times every below).each do |setting|
+      %w[times every below].each do |setting|
         assert_equal Eye::Patch::ValueParser.parse(check["config"][setting]), parsed_check[setting.to_sym]
       end
     end
@@ -66,9 +66,9 @@ describe Eye::Patch do
     end
 
     it "creates process clusters" do
-      process = @original["processes"].detect { |process| process["count"] }
+      process = @original["processes"].detect { |p| p["count"] }
       process["count"].times do |index|
-        name = "#{process["name"]}-#{index}"
+        name = "#{process['name']}-#{index}"
         parsed_process = @application[:groups][process["group"]][:processes][name]
 
         assert_equal process["group"], parsed_process[:group]
@@ -84,10 +84,11 @@ describe Eye::Patch do
       check = process_config["config"]["monitor_children"]["checks"].first
       parsed_check = process[:monitor_children][:checks][check["name"].to_sym]
 
-      %w(times every below).each do |setting|
+      %w[times every below].each do |setting|
         assert_equal(
           Eye::Patch::ValueParser.parse(check["config"][setting]),
-          parsed_check[setting.to_sym])
+          parsed_check[setting.to_sym],
+        )
       end
     end
 
@@ -97,7 +98,7 @@ describe Eye::Patch do
     end
 
     it "sets :stderr and :stdout options for each process from passed :stdall" do
-      process = @original["processes"].reject { |process| process["group"] }.first
+      process = @original["processes"].reject { |p| p["group"] }.first
       parsed_process = @application[:groups]["__default__"][:processes].values.first
 
       assert_equal process["config"]["stdall"], parsed_process[:stdout]
@@ -108,7 +109,7 @@ describe Eye::Patch do
   describe ".parse with per-process overrides" do
     before do
       @fixture = File.expand_path(File.join(File.dirname(__FILE__), %w[.. .. fixtures overrides.yml]))
-      @original = YAML.load(File.open(@fixture))
+      @original = YAML.safe_load(File.open(@fixture))
       @parsed = Eye::Patch.parse(@fixture)
 
       @settings = @parsed.settings
@@ -121,7 +122,7 @@ describe Eye::Patch do
       trigger = @original["processes"].detect { |p| p["name"] == process[:name] }["triggers"].first
       parsed_trigger = process[:triggers][trigger["name"].to_sym]
 
-      %w(times within).each do |setting|
+      %w[times within].each do |setting|
         assert_equal Eye::Patch::ValueParser.parse(trigger["config"][setting]), parsed_trigger[setting.to_sym]
       end
     end
@@ -131,7 +132,7 @@ describe Eye::Patch do
       check = @original["processes"].detect { |p| p["name"] == process[:name] }["checks"].first
       parsed_check = process[:checks][check["name"].to_sym]
 
-      %w(times every below).each do |setting|
+      %w[times every below].each do |setting|
         assert_equal Eye::Patch::ValueParser.parse(check["config"][setting]), parsed_check[setting.to_sym]
       end
     end

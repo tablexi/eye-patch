@@ -3,60 +3,57 @@ Eye::Cli.class_eval do
 
   def loader_path
     filename = File.expand_path(File.join(File.dirname(__FILE__), %w[.. .. .. bin eye-patch-loader]))
-    File.exists?(filename) ? filename : nil
+    File.exist?(filename) ? filename : nil
   end
 end
 
 require "eye/utils/mini_active_support"
 Eye::Process.class_eval do
-
   def daemonize_process
-    time_before = Time.now
     res = Eye::System.daemonize(self[:start_command], config)
-    start_time = Time.now - time_before
 
     info "daemonizing: `#{self[:start_command]}` with start_grace: #{self[:start_grace].to_f}s, env: #{self[:environment].inspect}, working_dir: #{self[:working_dir]}, <#{res[:pid]}>"
 
     if res[:error]
-
-      if res[:error].message == 'Permission denied - open'
+      if res[:error].message == "Permission denied - open"
         error "daemonize failed with #{res[:error].inspect}; make sure #{[self[:stdout], self[:stderr]]} are writable"
       else
         error "daemonize failed with #{res[:error].inspect}"
       end
 
-      return {:error => res[:error].inspect}
+      return { error: res[:error].inspect }
     end
 
     self.pid = res[:pid]
 
-    unless self.pid
-      error 'no pid was returned'
-      return {:error => :empty_pid}
+    unless pid
+      error "no pid was returned"
+      return { error: :empty_pid }
     end
 
     sleep_grace(:start_grace)
 
     unless process_really_running?
-      error "process <#{self.pid}> not found, it may have crashed (#{check_logs_str})"
-      return {:error => :not_really_running}
+      error "process <#{pid}> not found, it may have crashed (#{check_logs_str})"
+      return { error: :not_really_running }
     end
 
     if !self[:smart_pid] && !failsafe_save_pid
-      error "expected to manage pidfile for process <#{self.pid}>; pidfile is unwritable"
-      return {:error => :cant_write_pid}
+      error "expected to manage pidfile for process <#{pid}>; pidfile is unwritable"
+      return { error: :cant_write_pid }
     end
 
     res
   end
 
   def control_pid?
-    !!self[:daemonize] && !self[:smart_pid]
+    !!self[:daemonize] && !self[:smart_pid] # rubocop:disable Style/DoubleNegation
   end
 end
 
 Eye::System.class_eval do
   class << self
+
     alias_method :daemonize_without_hook, :daemonize
     alias_method :exec_without_hook, :exec
 
@@ -75,11 +72,12 @@ Eye::System.class_eval do
     def spawn_options(config = {})
       options = {
         pgroup: true,
-        chdir: config[:working_dir] || '/',
-        close_others: !config[:preserve_fds] }
+        chdir: config[:working_dir] || "/",
+        close_others: !config[:preserve_fds],
+      }
 
-      options[:out]   = [config[:stdout], 'a'] if config[:stdout]
-      options[:err]   = [config[:stderr], 'a'] if config[:stderr]
+      options[:out]   = [config[:stdout], "a"] if config[:stdout]
+      options[:err]   = [config[:stderr], "a"] if config[:stderr]
       options[:in]    = config[:stdin] if config[:stdin]
       options[:umask] = config[:umask] if config[:umask]
 
@@ -90,17 +88,17 @@ Eye::System.class_eval do
 
       options
     end
+
   end
 end
 
 Eye::Controller.class_eval do
-
   def invoke_spawn_callback
     debug "Attempting before_spawn hook"
-    if respond_to?(:before_spawn)
-      debug "Invoking before_spawn hook"
-      before_spawn
-    end
+    return unless respond_to?(:before_spawn)
+
+    debug "Invoking before_spawn hook"
+    before_spawn
   end
 
   private
