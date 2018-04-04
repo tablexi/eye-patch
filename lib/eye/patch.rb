@@ -3,11 +3,13 @@ require "eye/patch/overrides"
 
 Eye::Notify::TYPES[:ses] = "SES"
 Eye::Notify::TYPES[:aws_sdk] = "AWSSDK"
+Eye::Notify::TYPES[:datadog] = "DATADOG"
 
 module Eye
   class Notify
     autoload :SES, "eye/notify/ses"
     autoload :AWSSDK, "eye/notify/awssdk"
+    autoload :DATADOG, "eye/notify/datadog"
   end
 end
 

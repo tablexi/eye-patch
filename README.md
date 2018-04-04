@@ -30,9 +30,9 @@ Or install it yourself as:
 
 Note that SES support will only be provided if a necessary gem is installed on the system.
 
-`Eye::Patch` supports 2 different SES-backed gems:
+`Eye::Patch` supports 2 different SES-backed gems, and also the datadog gem:
 
-1. aws-ses
+1. aws-ses gem
 
 **Deprecated**: The `aws-sdk-ses` gem is recommended in place of aws-ses, as aws-ses hasn't been maintained in years.
 
@@ -50,14 +50,13 @@ If the [`aws-ses`](https://github.com/drewblas/aws-ses) gem is available on the 
             access_key_id: Your+AWS+Access+Key+ID
             secret_access_key: Your+AWS+Secret+Access+Key
 
-2. aws-sdk/aws-sdk-ses
+2. aws-sdk/aws-sdk-ses gems
 
 If either of the [`aws-sdk`](https://github.com/aws/aws-sdk-ruby/) or [`aws-sdk-ses`](https://github.com/aws/aws-sdk-ruby/) gems are available on the system, use the `type: aws_sdk` setting. (Note: usually one of these gems are installed as a consequence of installing [aws-sdk-rails](https://github.com/aws/aws-sdk-rails)).
 
 Note: As of version 2.x of `aws-sdk-rails`, it only includes `aws-sdk-ses`.
 
 Note: As of version 3.x of `aws-sdk`, you can instead use `aws-sdk-ses` in order to only load the SES portion of the libraries. Before version 2.x of `aws-sdk`, the gem included all of the AWS libraries.
-
 
   Example configuration:
 
@@ -74,7 +73,24 @@ Note: As of version 3.x of `aws-sdk`, you can instead use `aws-sdk-ses` in order
             secret_access_key: Your+AWS+Secret+Access+Key # optional
 
 
-In either case above, an example notification block for monitored process:
+3. datadog (dogapi gem)
+
+If you want to send crash notifications through datadag, you can do that by specifying the api_key for datadog. You must include the `dogapi` gem in your project Gemfile, so that the DataDog Ruby bindings are available.
+
+[To retrieve your api_key](https://github.com/DataDog/dogapi-rb#how-to-find-your-api-and-application-keys)
+
+Example configuration:
+
+    notifications:
+      - name: crash # this name must match the "notify" target of the process.
+        type: datadog # for datadog
+        level: error
+        config:
+          api_key: You+Datadog+API+Key
+
+##### Example block for monitored processes:
+
+In any case above, an example notification block for monitored process:
 
     processes:
       - name: unicorn

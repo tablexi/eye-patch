@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "dogapi"
 
 module Eye
@@ -14,7 +16,7 @@ module Eye
           alert_type: "error",
           aggregation_key: msg_host + msg_full_name,
           source_type: "None",
-          tags: [ "eye" ],
+          tags: ["eye"]
         }
 
         options[:alert_type] = alert_type if alert_type
@@ -24,7 +26,8 @@ module Eye
 
         dog = Dogapi::Client.new(api_key)
 
-        dog.emit_event(Dogapi::Event.new(
+        dog.emit_event(
+          Dogapi::Event.new(
             message_body,
             aggregation_key: options[:aggregation_key],
             alert_type: options[:alert_type],
