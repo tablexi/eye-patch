@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "eye"
 require "eye/patch/overrides"
 
@@ -6,11 +8,15 @@ Eye::Notify::TYPES[:aws_sdk] = "AWSSDK"
 Eye::Notify::TYPES[:datadog] = "DataDog"
 
 module Eye
+
   class Notify
+
     autoload :SES, "eye/notify/ses"
     autoload :AWSSDK, "eye/notify/awssdk"
     autoload :DataDog, "eye/notify/datadog"
+
   end
+
 end
 
 module Eye::Patch
@@ -25,7 +31,8 @@ module Eye::Patch
 
     config = ::Eye::Config.new(
       Config.new(settings),
-      Application.new(settings))
+      Application.new(settings),
+    )
     config.validate!
 
     config.applications.values.each do |application|
@@ -35,4 +42,5 @@ module Eye::Patch
 
     config
   end
+
 end

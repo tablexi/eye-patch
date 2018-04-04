@@ -1,4 +1,7 @@
+# frozen_string_literal: true
+
 module Eye::Patch
+
   class OptionSet < Hash
 
     def initialize(option_class, options)
@@ -7,5 +10,7 @@ module Eye::Patch
         self[option_data[:name]] = option[:config].merge(type: option_data[:type])
       end
     end
+
   end
+
 end

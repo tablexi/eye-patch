@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 class Eye::Patch::Config < Hash
 
   def initialize(settings)
     super()
-    self.merge!(parse(settings))
+    merge!(parse(settings))
   end
 
   private
@@ -29,7 +31,9 @@ class Eye::Patch::Config < Hash
         name: notify[:name].to_s,
         type: notify[:type].to_sym,
         contact: notify[:contact].to_s,
-        opts: {} }
+        opts: {},
+      }
     end
   end
+
 end

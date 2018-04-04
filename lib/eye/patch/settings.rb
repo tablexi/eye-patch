@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "erb"
 require "forwardable"
 require_relative "value_parser"
@@ -5,6 +7,7 @@ require_relative "value_parser"
 module Eye::Patch
 
   class Settings
+
     extend Forwardable
     def_delegators :parsed, :[], :fetch
 
@@ -13,9 +16,9 @@ module Eye::Patch
       erb = ERB.new(file.read)
       erb.filename = file.path
 
-      @settings = YAML.load(erb.result)
+      @settings = YAML.safe_load(erb.result)
     ensure
-      file.close unless file.nil?  
+      file&.close
     end
 
     private
@@ -38,5 +41,7 @@ module Eye::Patch
         item
       end
     end
+
   end
+
 end

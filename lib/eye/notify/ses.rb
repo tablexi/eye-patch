@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "aws/ses"
 
 class Eye::Notify::SES < Eye::Notify
@@ -9,14 +10,18 @@ class Eye::Notify::SES < Eye::Notify
 
   def execute
     AWS::SES::Base.new(
-      access_key_id:     access_key_id,
-      secret_access_key: secret_access_key ).send_email(message)
+      access_key_id: access_key_id,
+      secret_access_key: secret_access_key,
+    ).send_email(message)
   end
 
   def message
-    { to: contact,
+    {
+      to: contact,
       from: from,
       subject: message_subject,
-      text_body: message_body }
+      text_body: message_body,
+    }
   end
+
 end

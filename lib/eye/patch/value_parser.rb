@@ -1,14 +1,17 @@
+# frozen_string_literal: true
+
 require "chronic_duration"
 
 module Eye::Patch
 
   class ValueParser
 
-    TIME_MATCHER = /\s(?<duration>(?:week|day|hour|minute|second)s?)(?:\s|\Z)/.freeze
-    SIZE_MATCHER = /\s(?<size>(?:tera|giga|mega|kilo)?bytes?)(?:\s|\Z)/.freeze
-    MATCHERS     = {
+    TIME_MATCHER = /\s(?<duration>(?:week|day|hour|minute|second)s?)(?:\s|\Z)/
+    SIZE_MATCHER = /\s(?<size>(?:tera|giga|mega|kilo)?bytes?)(?:\s|\Z)/
+    MATCHERS = {
       time: TIME_MATCHER,
-      size: SIZE_MATCHER }.freeze
+      size: SIZE_MATCHER,
+    }.freeze
 
     def self.parse(value)
       return value unless value.is_a?(String)
@@ -20,8 +23,6 @@ module Eye::Patch
       result || value
     end
 
-    private
-
     def self.parse_time(value)
       ChronicDuration.parse(value)
     end
@@ -30,5 +31,7 @@ module Eye::Patch
       unit = value.match(SIZE_MATCHER)[:size]
       value.gsub(/[^\d.]/, "").to_f.send(unit)
     end
+
   end
+
 end

@@ -1,5 +1,6 @@
-Capistrano::Configuration.instance.load do
+# frozen_string_literal: true
 
+Capistrano::Configuration.instance.load do
   _cset(:eye_default_hooks) { true }
   _cset(:eye_config) { "config/eye.yml" }
   _cset(:eye_bin) { "bundle exec eye-patch" }
@@ -12,7 +13,6 @@ Capistrano::Configuration.instance.load do
   end
 
   namespace :eye do
-
     desc "Start eye with the desired configuration file"
     task :load_config, roles: -> { fetch(:eye_roles) } do
       run "cd #{current_path} && #{fetch(:eye_bin)} quit"

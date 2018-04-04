@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
-$:.unshift File.expand_path(File.join(File.dirname(__FILE__), %w[.. lib]))
+$LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), %w[.. lib]))
 require "eye/patch"
 
 Eye::Cli.start

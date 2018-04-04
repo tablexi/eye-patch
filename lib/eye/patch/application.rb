@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "group_set"
 require_relative "option_set"
 
@@ -25,7 +27,8 @@ module Eye::Patch
         name: @settings[:name],
         notify: notifications,
         triggers: triggers,
-        checks: checks )
+        checks: checks,
+      )
     end
 
     def parse_processes
@@ -45,5 +48,7 @@ module Eye::Patch
     def checks
       OptionSet.new(Eye::Checker, @settings[:checks])
     end
+
   end
+
 end
