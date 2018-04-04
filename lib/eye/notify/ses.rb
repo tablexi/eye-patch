@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "aws/ses"
 
 class Eye::Notify::SES < Eye::Notify
