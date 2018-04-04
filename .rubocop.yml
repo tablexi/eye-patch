@@ -1,3 +1,6 @@
+AllCops:
+  TargetRubyVersion: 2.4.2
+
 inherit_from: .rubocop_todo.yml
 
 Layout/EmptyLinesAroundClassBody:
@@ -41,4 +44,3 @@ Style/TrailingCommaInArrayLiteral:
 
 Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: comma
-

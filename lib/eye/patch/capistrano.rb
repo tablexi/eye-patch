@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Capistrano::Configuration.instance.load do
   _cset(:eye_default_hooks) { true }
   _cset(:eye_config) { "config/eye.yml" }

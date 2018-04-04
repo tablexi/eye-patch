@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "process_set"
 
 module Eye::Patch

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :load do
   task :defaults do
     set :eye_config, -> { "config/eye.yml" }

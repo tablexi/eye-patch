@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Eye::Cli.class_eval do
   private
 

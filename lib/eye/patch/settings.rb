@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "erb"
 require "forwardable"
 require_relative "value_parser"
@@ -16,7 +18,7 @@ module Eye::Patch
 
       @settings = YAML.safe_load(erb.result)
     ensure
-      file.close unless file.nil?
+      file&.close
     end
 
     private

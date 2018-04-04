@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "chronic_duration"
 
 module Eye::Patch

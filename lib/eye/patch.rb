@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "eye"
 require "eye/patch/overrides"
 
