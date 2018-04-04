@@ -4,7 +4,7 @@ require "dogapi"
 
 module Eye
   class Notify
-    class DataDog < Eye::Notify
+    class DATADOG < Eye::Notify
       param :aggregation_key, String
       param :alert_type, String
       param :api_key, String, true
