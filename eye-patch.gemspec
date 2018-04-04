@@ -22,6 +22,8 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^test/})
   spec.require_paths = ["lib"]
 
+  spec.required_ruby_version = ">= 2.4.2"
+
   spec.add_dependency "chronic_duration"
   spec.add_dependency "eye", ">= 0.6.2"
 
