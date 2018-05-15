@@ -1,0 +1,21 @@
+version: 2
+jobs:
+  build:
+    parallelism: 1
+    docker:
+      - image: circleci/ruby:2.5.0
+        environment:
+          RAILS_ENV: test
+    steps:
+      - checkout
+
+      # Gems
+      - restore_cache:
+          key: eye-patch-{{ .Branch }}
+      - run: bundle install --path vendor/bundle --jobs=4 --retry=3
+      - save_cache:
+          key: eye-patch-{{ .Branch }}
+          paths:
+            - vendor/bundle
+
+      - run: bundle exec rake test
