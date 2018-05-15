@@ -18,6 +18,4 @@ jobs:
           paths:
             - vendor/bundle
 
-      - type: shell
-        command: |
-          bundle exec rake test
+      - run: bundle exec rake test
