@@ -25,7 +25,7 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = ">= 2.4.2"
 
   spec.add_dependency "chronic_duration"
-  spec.add_dependency "eye", ">= 0.6.2"
+  spec.add_dependency "eye", ">= 0.10.0"
 
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "minitest"
