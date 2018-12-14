@@ -7,6 +7,7 @@ namespace :load do
     set :eye_roles, -> { :app }
     set :eye_env, -> { {} }
 
+    set :chruby_map_bins, fetch(:chruby_map_bins, []).push(fetch(:eye_bin))
     set :rvm_map_bins, fetch(:rvm_map_bins, []).push(fetch(:eye_bin))
     set :rbenv_map_bins, fetch(:rbenv_map_bins, []).push(fetch(:eye_bin))
     set :bundle_bins, fetch(:bundle_bins, []).push(fetch(:eye_bin))
